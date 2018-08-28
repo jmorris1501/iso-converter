@@ -5,6 +5,7 @@ import org.bitbucket.openisoj.Iso8583Rev93;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import java.io.StringReader;
 
 @SuppressWarnings("unused")

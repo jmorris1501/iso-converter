@@ -47,16 +47,8 @@
                 </executions>
                 <configuration>
                     <sources>
-                        <!--<source>src/main/resources/card.xsd</source>-->
-                        <!--<source>src/main/resources/commonDataType.xsd</source>-->
-                        <!--<source>src/main/resources/device.xsd</source>-->
-                        <!--<source>src/main/resources/eod.xsd</source>-->
-                        <!--<source>src/main/resources/epurse.xsd</source>-->
-                        <!--<source>src/main/resources/holder.xsd</source>-->
-                        <!--<source>src/main/resources/message.xsd</source>-->
-                        <!--<source>src/main/resources/messageType.xsd</source>-->
-                        <!--<source>src/main/resources/product.xsd</source>-->
-                        <!--<source>src/main/resources/txn.xsd</source>-->
+                        <source>src/main/resources/pain.001.001.08.xsd</source>
+                        <source>src/main/resources/pain.002.001.09.xsd</source>
                     </sources>
                 </configuration>
             </plugin>
@@ -82,7 +74,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <!-- Create runnable jar with build number in manifest file -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -98,28 +89,6 @@
                     </archive>
                 </configuration>
             </plugin>
-
-            <!-- Create release zip file -->
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <id>create-distribution</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <finalName>${project.artifactId}</finalName>
-                            <descriptors>
-                                <descriptor>assembly/bundle.xml</descriptor>
-                            </descriptors>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
         </plugins>
     </build>
 </project>

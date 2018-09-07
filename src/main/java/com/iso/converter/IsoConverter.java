@@ -61,17 +61,25 @@ public class IsoConverter {
 	 * @param iso8583 iso8583 0100 request message
 	 * @return CustomerCreditTransferInitiationV08 message
 	 */
-	public static CustomerCreditTransferInitiationV08 convert85830100to20022(Iso8583 iso8583) throws ParseException, DatatypeConfigurationException {
+	public static CustomerCreditTransferInitiationV08 convert85830100to20022(
+			Iso8583 iso8583,
+			PartyIdentification43 initParty,
+			BranchAndFinancialInstitutionIdentification5 forwardingAgent,
+			String entityID,
+			PartyIdentification43 debtorInfo,
+			BranchAndFinancialInstitutionIdentification5 debtorAgent,
+			CashAccount24 debtorAccount,
+			PartyIdentification43 ultimateDebtor,
+			CashAccount24 chargeAccount,
+			BranchAndFinancialInstitutionIdentification5 chargeAccountAgent) throws ParseException, DatatypeConfigurationException {
 		CustomerCreditTransferInitiationV08 iso20022 = new CustomerCreditTransferInitiationV08();
 
-		//TODO entity id
-		String entityID = "";
 		BigDecimal controlSum = getControlSum(iso8583);
 
 		// create the group header for the message
 		GroupHeader48 grpHdr = new GroupHeader48();
 		String isoDate = iso8583.get(Iso8583.Bit._007_TRAN_DATE_TIME);
-		grpHdr.setMsgId(entityID + "/" + isoDate + "/CCT001");
+		grpHdr.setMsgId(entityID + "/" + isoDate + "/CCT001/0100");
 		grpHdr.setCreDtTm(convertDateToXML(isoDate, YYMMDD_FORMAT));
 		Authorisation1Choice authChoice = new Authorisation1Choice();
 		authChoice.setCd(Authorisation1Code.AUTH);
@@ -79,6 +87,8 @@ public class IsoConverter {
 		grpHdr.getAuthstn().add(authChoice);
 		grpHdr.setNbOfTxs("1");
 		grpHdr.setCtrlSum(controlSum);
+		grpHdr.setInitgPty(initParty);
+		grpHdr.setFwdgAgt(forwardingAgent);
 		//destination and address (issuer?)
 		//branch and fin inst info
 		iso20022.setGrpHdr(grpHdr);
@@ -92,19 +102,16 @@ public class IsoConverter {
 		DateAndDateTimeChoice ddtc = new DateAndDateTimeChoice();
 		ddtc.setDt(convertDateToXML(iso8583.get(Iso8583.Bit._013_LOCAL_TRAN_DATE) + iso8583.get(Iso8583.Bit._012_LOCAL_TRAN_TIME), MMDD_FORMAT + HHMMSS_FORMAT));
 		payment.setReqdExctnDt(ddtc);
-		PartyIdentification43 dbtr = new PartyIdentification43();
-		//TODO
-		payment.setDbtr(dbtr);
-		CashAccount24 dbtrAcc = new CashAccount24();
-		//TODO
-		payment.setDbtrAcct(dbtrAcc);
-		BranchAndFinancialInstitutionIdentification5 dbtrAgt = new BranchAndFinancialInstitutionIdentification5();
-		//TODO
-		payment.setDbtrAgt(dbtrAgt);
+		payment.setDbtr(debtorInfo);
+		payment.setDbtrAcct(debtorAccount);
+		payment.setDbtrAgt(debtorAgent);
+		payment.setUltmtDbtr(ultimateDebtor);
+		payment.setChrgsAcct(chargeAccount);
+		payment.setChrgsAcctAgt(chargeAccountAgent);
 
-
+		CreditTransferTransaction26 ctt26 = new CreditTransferTransaction26();
 		//TODO
-
+		payment.getCdtTrfTxInf().add(ctt26);
 		iso20022.getPmtInf().add(payment);
 
 		return iso20022;
